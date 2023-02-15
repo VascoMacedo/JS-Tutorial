@@ -1,0 +1,207 @@
+<html>
+    <head>
+        <title> Vasco's To-Do App </title>        
+    </head>
+
+    <body>        
+        <input id="toDoTitle" type="text"/>
+        <input id="toDoDate" type="date"/>
+        <button onclick = "AddToDo(); disabled=false;"> Add To-Do </button>
+        <button id="DoneId" onclick="ChangeButton();">  </button>
+        <button onclick="ChangeDiv()">UP</button>
+        <div id="CounterId">0</div>        
+        <input id="Add-div" type="text"/>
+        <button onclick="AddDiv()">Add div</button>     
+        <div id="List-ID"></div>           
+        <script>
+            
+            //      MODEL
+            let Contador = 0; 
+            var SavedData = JSON.parse(localStorage.getItem("todos"));                      
+            var todos;
+
+            if(Array.isArray(SavedData))
+            {                
+                todos = SavedData;
+            }else
+            {
+                todos = [                
+                {
+                    title: 99,
+                    date: "2022-06-13",
+                    id: "id1"
+                },
+                {
+                    title: "Buy Rope",
+                    date: "2022-07-23",
+                    id: "id2"
+                },
+                {
+                    title: "Kill Myself",
+                    date: "2023-01-05",
+                    id: "id3"
+                }];
+            }                                
+            
+            //  Saves To-Do
+            function Save()
+            {
+                localStorage.setItem("todos", JSON.stringify(todos));                
+            }
+
+            //  Creates A To-Do
+            function CreateToDo(newToDoTitle, newToDoDate)
+            {
+                todos.push(
+                {
+                    title : newToDoTitle.value,
+                    date : newToDoDate.value,
+                    id : new Date().getTime()                    
+                    //id : Date().toString()                    
+                });
+
+                Save();
+            }
+            
+
+            // Delete A To-Do
+            function RemoveAToDo(buttonId)
+            {
+                todos = todos.filter(function (todo)
+                {
+                    if(todo.id == buttonId)
+                    {
+                        return false;
+                    }else
+                    {
+                        return true;
+                    }
+                });
+
+                Save();
+            }
+
+
+
+            //      CONTROLLER
+            function deleteToDo(event)
+            {                
+                var buttonId = event.target.id;
+                
+                RemoveAToDo(buttonId);                  
+                Render();
+                //console.log(buttonId);
+            }
+
+            function AddToDo()
+            {
+                var newToDoTitle = document.getElementById("toDoTitle");
+                var newToDoDate = document.getElementById("toDoDate");
+                
+                CreateToDo(newToDoTitle, newToDoDate);
+                Render();
+            }
+
+
+            //      VIEW
+            function Render()
+            {
+                document.getElementById("List-ID").innerHTML = "";
+
+                todos.forEach(function (todo)
+                {
+                    var element = document.createElement("div");
+                    element.innerText = todo.title + " " + todo.date;
+                    document.getElementById("List-ID").appendChild(element);
+
+                    var deleteElement = document.createElement("button");
+                    deleteElement.innerText = "Delete";
+                    deleteElement.style = "margin-left: 12px";
+                    deleteElement.id = todo.id;
+                    deleteElement.onclick = deleteToDo;
+                    element.appendChild(deleteElement);
+                });                
+            }
+
+
+
+
+            function AddDiv()
+            {
+                var element = document.getElementById("Add-div");
+                var div = document.createElement("div");
+                div.innerText = element.value;
+                document.body.appendChild(div);
+            }
+
+            function ChangeDiv()
+            {           
+                Contador += 1;     
+                var element = document.getElementById("CounterId");
+                element.innerText = Contador;                
+            }
+
+            function ChangeButton()
+            {
+                var element = document.getElementById("DoneId");
+                element.innerText = "DONE";
+            }       
+
+            function toUpper(stringArr) 
+            {
+                let result = [];
+
+                stringArr.forEach(function (str) {
+                result.push(str.toUpperCase());
+                });
+
+                console.log(result);
+
+                var element = document.createElement("div");
+                element.innerText = result;
+                document.body.appendChild(element);
+            }
+
+            function arrayDouble(stringArr)
+            {
+                var result = [];
+
+                stringArr.forEach(
+                    function (str)
+                    {
+                        result.push(str);
+                        result.push(str);
+                    }
+                );
+
+                console.log(result);
+
+                var element = document.createElement("div");
+                element.innerText = result;
+                document.body.appendChild(element);
+            }
+            
+            function arraySum(stringArr)
+            {
+                var result = 0;
+                
+                stringArr.forEach(
+                    function (str)
+                    {
+                        result += str;
+                    }
+                );
+
+                console.log(result);
+
+                var element = document.createElement("div");
+                element.innerText = result;
+                document.body.appendChild(element);
+            }
+
+            Render();                                                                        
+
+            document.title = "NEW TITLE SHIT"               
+        </script>
+    </body>
+</html>
